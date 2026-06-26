@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analisador de Organização de Projetos</title>
+  <meta name="description" content="Sistema CRUD para analisar a organização estrutural de pastas de projeto." />
+  <link rel="stylesheet" href="/app/styles/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="container">
+      <div>
+        <h1 class="site-title">Analisador de Organização de Projetos</h1>
+        <p class="site-subtitle">Analise a estrutura de pastas e gerencie suas análises</p>
+      </div>
+      <div class="api-status" id="api-status">Verificando API...</div>
+    </div>
+  </header>
+
+  <!-- ── Conteúdo principal ────────────────────────────────────── -->
+  <main class="container">
+
+    <!-- Formulário de nova análise -->
+    <section aria-labelledby="section-create-title">
+      <h2 class="section-title" id="section-create-title">Nova Análise</h2>
+      <div class="card card-form">
+        <form id="form-create" novalidate>
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="create-name">Nome da análise *</label>
+              <input
+                type="text"
+                id="create-name"
+                name="name"
+                placeholder="Ex.: Verificação do projeto X"
+                required
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="create-description">Descrição</label>
+              <input
+                type="text"
+                id="create-description"
+                name="description"
+                placeholder="Opcional — contexto da análise"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="form-group full">
+              <label for="create-path">Caminho da pasta *</label>
+              <input
+                type="text"
+                id="create-path"
+                name="target_path"
+                placeholder="Ex.: C:\Users\usuario\meu_projeto ou ./samples/projeto_organizado"
+                required
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="btn-create" class="btn btn-primary">Analisar</button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Lista de análises -->
+    <section aria-labelledby="section-list-title">
+      <h2 class="section-title" id="section-list-title">Análises salvas</h2>
+      <div id="analyses-list">
+        <p class="state-message">Carregando análises...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Modal: Detalhes ────────────────────────────────────── -->
+  <div
+    id="modal-detail"
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-detail-title"
+  >
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-detail-title">Detalhes da Análise</h2>
+        <button
+          class="btn-close"
+          id="btn-close-detail"
+          aria-label="Fechar"
+          title="Fechar"
+        >&times;</button>
+      </div>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Editar ──────────────────────────────────────── -->
+  <div
+    id="modal-edit"
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-edit-title"
+  >
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-edit-title">Editar Análise</h2>
+        <button
+          class="btn-close"
+          id="btn-close-edit"
+          aria-label="Fechar"
+          title="Fechar"
+        >&times;</button>
+      </div>
+      <form id="form-edit" novalidate>
+        <input type="hidden" id="edit-id" />
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="edit-name">Nome *</label>
+            <input type="text" id="edit-name" required autocomplete="off" />
+          </div>
+
+          <div class="form-group">
+            <label for="edit-description">Descrição</label>
+            <input type="text" id="edit-description" autocomplete="off" />
+          </div>
+
+          <div class="form-group full">
+            <label for="edit-path">Caminho da pasta</label>
+            <input type="text" id="edit-path" autocomplete="off"
+              placeholder="Deixe em branco para manter o caminho atual" />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="btn-cancel-edit" class="btn btn-secondary">Cancelar</button>
+            <button type="submit" id="btn-save-edit" class="btn btn-primary">Salvar</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Toast ──────────────────────────────────────────────── -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- ── Scripts (ordem importa: api → ui → analyses) ──────── -->
+  <script src="/app/scripts/api.js"></script>
+  <script src="/app/scripts/ui.js"></script>
+  <script src="/app/scripts/analyses.js"></script>
+
+  <!-- Verificação de status da API no header -->
+  <script>
+    (async function checkApiStatus() {
+      const el = document.getElementById("api-status");
+      try {
+        const r = await fetch("http://127.0.0.1:8000/");
+        if (r.ok) {
+          el.textContent = "API conectada";
+          el.style.color = "#16a34a";
+        } else {
+          throw new Error();
+        }
+      } catch {
+        el.textContent = "API desconectada";
+        el.style.color = "#dc2626";
+      }
+    })();
+  </script>
+
+</body>
+</html>

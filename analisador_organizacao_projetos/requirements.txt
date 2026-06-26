@@ -1,0 +1,15 @@
+﻿# ──────────────────────────────────────────────────────────────────────────────
+# Dependências do projeto
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# Instalar com:
+#   py -m pip install -r requirements.txt
+#
+# ──────────────────────────────────────────────────────────────────────────────
+
+# API web
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+
+# Validação de dados (inclusa no FastAPI, mas explicitada para clareza)
+pydantic>=2.0.0
